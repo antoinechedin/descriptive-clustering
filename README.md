@@ -1,1 +1,1 @@
-# descriptive-clustering
+# DesC

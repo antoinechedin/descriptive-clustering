@@ -4,6 +4,29 @@ from sklearn.utils.validation import check_array
 
 
 def kneedle_scan(X, return_plots=False):
+    """Knee detection using Kneedle method
+
+    Parameters
+    ----------
+    X : array-like, shape: (n_samples, n_features)
+        Data graph in which you want to find the knee.
+    return_plots : boolean, optional
+        If True, also return a data list to plot for graphical explanations.
+
+    Returns
+    -------
+    knee : ndarray, shape: (1, n_features)
+        The detected knee point
+    plots : tuple of ndarray, optional
+        Tuple of plots for graphical explanations
+
+    Raise
+    -----
+    ValueError
+        If paramater X has less than 2 samples
+
+    """
+
     X = check_array(X)
     if len(X) <= 2:
         raise ValueError("The dataset size is 2 or less."
@@ -25,6 +48,29 @@ def kneedle_scan(X, return_plots=False):
 
 
 def l_method_scan(X, return_plots=False):
+    """Knee detection using L-method
+
+    Parameters
+    ----------
+    X : array-like, shape: (n_samples, n_features)
+        Data graph in which you want to find the knee.
+    return_plots : boolean, optional
+        If True, also return a data list to plot for graphical explanations.
+
+    Returns
+    -------
+    knee : ndarray, shape: (1, n_features)
+        The detected knee point
+    plots : tuple of ndarray, optional
+        Tuple of plots for graphical explanations
+
+    Raise
+    -----
+    ValueError
+        If paramater X has less than 2 samples
+
+    """
+
     from sklearn.linear_model import LinearRegression
     from sklearn.metrics import mean_squared_error as mse
 
@@ -67,6 +113,28 @@ def l_method_scan(X, return_plots=False):
 
 
 def max_amplitude(X, return_plots=False):
+    """Knee detection using max amplitude method
+
+    Parameters
+    ----------
+    X : array-like, shape: (n_samples, n_features)
+        Data graph in which you want to find the knee.
+    return_plots : boolean, optional
+        If True, also return a data list to plot for graphical explanations.
+
+    Returns
+    -------
+    knee : ndarray, shape: (1, n_features)
+        The detected knee point
+    plots : tuple of ndarray, optional
+        Tuple of plots for graphical explanations
+
+    Raise
+    -----
+    ValueError
+        If paramater X has less than 2 samples
+
+    """
     from math import sqrt
 
     X = check_array(X)

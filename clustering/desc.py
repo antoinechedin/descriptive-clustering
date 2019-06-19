@@ -4,7 +4,7 @@ from sklearn.base import BaseEstimator
 from sklearn.utils.validation import check_array, check_is_fitted
 from scipy.cluster.hierarchy import linkage, fcluster
 
-import kneedetector
+from . import kneedetector
 
 
 class DesC(BaseEstimator):
@@ -29,7 +29,7 @@ class DesC(BaseEstimator):
         self.X_ = check_array(X)
 
         # Build linkage
-        self._z = linkage(X, method="single")
+        self._z_ = linkage(X, method="single")
         D = np.vstack((
             np.arange(1, len(self.X_)),
             self._z[:, 2][::-1]
@@ -37,7 +37,10 @@ class DesC(BaseEstimator):
 
         # Add last point with a 0 cost
         self.eval_graph_ = np.vstack((D, np.array([len(D) + 1., 0.])))
-        self.knee_ = DesC.knee_detection_switch[self.knee_method]()
+        self.knee_, self.plots_ = DesC.knee_detection_switch[self.knee_method](
+            self.eval_graph_,
+            True
+            )
         self.K_ = int(self.knee_[0])
         self.labels_ = fcluster(self._z, self.K_, criterion="maxclust")
 

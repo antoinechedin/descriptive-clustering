@@ -15,7 +15,7 @@ def kneedle_scan(X, return_plots=False):
 
     Returns
     -------
-    knee : ndarray, shape: (1, n_features)
+    knee : ndarray, shape: (n_features)
         The detected knee point
     plots : tuple of ndarray, optional
         Tuple of plots for graphical explanations
@@ -25,6 +25,14 @@ def kneedle_scan(X, return_plots=False):
     ValueError
         If paramater X has less than 2 samples
 
+    Examples
+    --------
+    >>> from clustering import kneedetector
+    >>> import numpy as np
+    >>> X = np.array([[0, 8], [1, 4], [2, 2], [4, 1], [8, 0]])
+    >>> kneedetector.kneedle_scan(X)
+    array([2, 2])
+
     """
 
     X = check_array(X)
@@ -32,7 +40,9 @@ def kneedle_scan(X, return_plots=False):
         raise ValueError("The dataset size is 2 or less."
                          + " There's no knee in such graph.")
 
-    line = np.vstack((X[:, 0], np.linspace(X[0, 1], X[-1, 1], len(X)))).T
+    a = (X[-1, 1] - X[0, 1]) / (X[-1, 0] - X[0, 0])
+    b = X[0, 1] - a * X[0, 0]
+    line = np.vstack((X[:, 0], [a * x + b for x in X[:, 0]])).T
     dist_to_line = line[:, 1] - X[:, 1]
     dist_to_line = dist_to_line[1: -1]  # Remove edges
     index = np.argmax(dist_to_line) + 1
@@ -59,7 +69,7 @@ def l_method_scan(X, return_plots=False):
 
     Returns
     -------
-    knee : ndarray, shape: (1, n_features)
+    knee : ndarray, shape: (n_features)
         The detected knee point
     plots : tuple of ndarray, optional
         Tuple of plots for graphical explanations
@@ -68,6 +78,14 @@ def l_method_scan(X, return_plots=False):
     -----
     ValueError
         If paramater X has less than 2 samples
+
+    Examples
+    --------
+    >>> from clustering import kneedetector
+    >>> import numpy as np
+    >>> X = np.array([[0, 8], [1, 4], [2, 2], [4, 1], [8, 0]])
+    >>> kneedetector.l_method_scan(X)
+    array([2, 2])
 
     """
 
@@ -112,7 +130,7 @@ def l_method_scan(X, return_plots=False):
     return knee
 
 
-def max_amplitude(X, return_plots=False):
+def max_amplitude_scan(X, return_plots=False):
     """Knee detection using max amplitude method
 
     Parameters
@@ -124,7 +142,7 @@ def max_amplitude(X, return_plots=False):
 
     Returns
     -------
-    knee : ndarray, shape: (1, n_features)
+    knee : ndarray, shape: (n_features)
         The detected knee point
     plots : tuple of ndarray, optional
         Tuple of plots for graphical explanations
@@ -134,8 +152,15 @@ def max_amplitude(X, return_plots=False):
     ValueError
         If paramater X has less than 2 samples
 
+    Examples
+    --------
+    >>> from clustering import kneedetector
+    >>> import numpy as np
+    >>> X = np.array([[0, 8], [1, 4], [2, 2], [4, 1], [8, 0]])
+    >>> kneedetector.max_amplitude_scan(X)
+    array([1, 4])
+
     """
-    from math import sqrt
 
     X = check_array(X)
     if len(X) <= 2:
@@ -146,8 +171,7 @@ def max_amplitude(X, return_plots=False):
     knee = None
     index = None
     for i in range(1, len(X)):
-        amp = sqrt((X[i - 1][0] - X[i][0]) ** 2 + (X[i - 1][1] - X[i][1]) ** 2)
-
+        amp = abs(X[i - 1, 1] - X[i, 1]) / abs(X[i - 1][0] - X[i][0])
         if amp > max_amp:
             index = i
             knee = X[i]

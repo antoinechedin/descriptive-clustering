@@ -20,7 +20,7 @@ class DesC(BaseEstimator):
     ----------
     eval_graph_ : ndarray, shape: (n_samples, 2)
         Evaluation graph of the fitted data set.
-    knee_ : ndarray, shape: (1, n_features)
+    knee_ : ndarray, shape: (n_features)
         Evaluation graph knee point.
     K_ : int
         Number of cluster.
@@ -34,12 +34,30 @@ class DesC(BaseEstimator):
     ValueError
         If knee_method is unknown
 
+    Examples
+    --------
+    >>> from clustering import DesC
+    >>> import numpy as np
+    >>> X = np.array([[1, 3], [2, 3], [1, 0], [5, 2], [5, 3]])
+    >>> desc = DesC().fit(X)
+    >>> desc.K_
+    3
+    >>> desc.eval_graph_
+    array([[1., 3.],
+           [2., 3.],
+           [3., 1.],
+           [4., 1.],
+           [5., 0.]])
+    >>> desc.labels_
+    array([2, 2, 3, 1, 1], dtype=int32)
+
+
     """
 
     knee_detection_switch = {
         "kneedle": kneedetector.kneedle_scan,
         "l-method": kneedetector.l_method_scan,
-        "amplitude": kneedetector.max_amplitude,
+        "amplitude": kneedetector.max_amplitude_scan,
         }
 
     def __init__(self, knee_method="kneedle"):

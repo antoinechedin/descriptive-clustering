@@ -18,7 +18,6 @@ desc = DesC().fit(X)
 desc.K_
 desc.eval_graph_
 desc.labels_
-array([2, 2, 3, 1, 1], dtype=int32)
 ```
 
 Output
